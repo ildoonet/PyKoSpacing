@@ -58,7 +58,7 @@ class Spacing:
                 for line in csv_var:
                     self.rules[line[index]] = re.compile('\s*'.join(line[index]))
 
-    def get_spaced_sent(self, raw_sent):
+    def get_spaced_sent(self, raw_sent, get_spaced_sent):
         raw_sent_ = "«" + raw_sent + "»"
         raw_sent_ = raw_sent_.replace(' ', '^')
         sents_in = [raw_sent_, ]
@@ -69,7 +69,10 @@ class Spacing:
         mat_set = results[0, ]
         preds = np.array(
             ['1' if i > 0.5 else '0' for i in mat_set[:len(raw_sent_)]])
-        return self.make_pred_sents(raw_sent_, preds)
+        if not get_spaced_sent:
+            return self.make_pred_sents(raw_sent_, preds)
+        else:
+            return preds
 
     def make_pred_sents(self, x_sents, y_pred):
         res_sent = []
